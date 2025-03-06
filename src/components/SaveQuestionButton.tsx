@@ -12,6 +12,7 @@ export default function SaveQuestionButton() {
   return (
     <button
       type="submit"
+      aria-label="save-question-button"
       disabled={pending}
       className="mt-6 sm:mt-0 sm:w-[calc(32px+2rem)] flex justify-end"
     >
