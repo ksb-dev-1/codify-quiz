@@ -18,7 +18,7 @@ export default function LandingPage({
         <p>Your go to platform for learning javascript</p>
 
         <Link
-          href={userId ? "/pages/questions?page=1" : "/login"}
+          href={userId ? "/pages/questions?page=1" : "/pages/signin"}
           className="my-8 bg-primary text-white px-8 py-3 rounded-custom hover:tracking-widest transition-all"
         >
           Start Learning
