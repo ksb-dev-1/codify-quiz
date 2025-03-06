@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
@@ -5,28 +6,12 @@ import { auth } from "@/auth";
 
 // components
 import Container from "@/components/shared/Container";
+import QuestionList from "@/components/QuestionList";
 
 export const metadata: Metadata = {
   title: "Questions",
   description: "List of questions",
 };
-
-async function fetchQuestions(params: URLSearchParams) {
-  const url = `${process.env.BASE_URL}/api/questions?${params.toString()}`;
-  const res = await fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    cache: "force-cache",
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch questions");
-  }
-
-  return res.json();
-}
 
 export default async function QuestionsPage({
   searchParams,
@@ -43,18 +28,17 @@ export default async function QuestionsPage({
   const currSearchParams = await searchParams;
   const { page, status, difficulty, topic } = currSearchParams;
 
-  // Construct URLSearchParams with query parameters
-  const params = new URLSearchParams({
-    ...(status && { status }),
-    ...(difficulty && { difficulty }),
-    ...(topic && { topic }),
-    page: String(page || 1),
-    limit: "10",
-    ...(userId && { userId }), // Include userId only if it exists
-  });
-
-  // Fetch questions using the constructed params
-  const questions = await fetchQuestions(params);
-
-  return <Container>{JSON.stringify(questions)}</Container>;
+  return (
+    <Container>
+      <Suspense fallback={<div>Loading...</div>}>
+        <QuestionList
+          userId={userId}
+          currentPage={page}
+          currentStatus={status}
+          currentDifficulty={difficulty}
+          currentTopic={topic}
+        />
+      </Suspense>
+    </Container>
+  );
 }
