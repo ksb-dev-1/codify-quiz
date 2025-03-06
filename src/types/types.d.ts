@@ -18,8 +18,8 @@ interface Topic {
 }
 
 interface Question {
-  _id: string;
   id: string;
+  qNo: number;
   question: string;
   codeSnippet: string;
   options: {
