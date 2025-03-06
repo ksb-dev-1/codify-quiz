@@ -75,13 +75,13 @@ export default function Navbar() {
     return (
       <NavbarWrapper>
         <div className="hidden sm:flex items-center">
-          <span className="skeleton text-transparent px-4 py-2 rounded-[25px]">
+          <span className="skeleton text-transparent px-4 py-2 rounded-custom">
             Questions
           </span>
-          <span className="skeleton text-transparent px-4 py-2 rounded-[25px] mx-4">
+          <span className="skeleton text-transparent px-4 py-2 rounded-custom mx-4">
             Bookmarks
           </span>
-          <span className="skeleton text-transparent px-4 py-2 rounded-[25px]">
+          <span className="skeleton text-transparent px-4 py-2 rounded-custom">
             Premium
           </span>
         </div>
@@ -99,19 +99,19 @@ export default function Navbar() {
           <div className="hidden sm:flex items-center">
             <Link
               href="/pages/questions?page=1"
-              className="px-4 py-2 rounded-[25px] hover:bg-slate-200 transition-colors"
+              className="px-4 py-2 rounded-custom hover:bg-slate-200 transition-colors"
             >
               Questions
             </Link>
             <Link
               href="/pages/saved"
-              className="px-4 py-2 rounded-[25px] hover:bg-slate-200 transition-colors mx-4"
+              className="px-4 py-2 rounded-custom hover:bg-slate-200 transition-colors mx-4"
             >
               Saved
             </Link>
             <Link
               href="#"
-              className="px-4 py-2 rounded-[25px] hover:bg-slate-200 transition-colors"
+              className="px-4 py-2 rounded-custom hover:bg-slate-200 transition-colors"
             >
               Premium
             </Link>
@@ -239,7 +239,7 @@ export default function Navbar() {
     <NavbarWrapper>
       <Link
         href="/pages/signin"
-        className="px-4 py-2 rounded-[25px] bg-primary text-white hover:bg-hover transition-colors"
+        className="px-4 py-2 rounded-custom bg-primary text-white hover:bg-hover transition-colors"
       >
         Sign in
       </Link>

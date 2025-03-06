@@ -54,6 +54,14 @@ export default function SigninPage() {
     );
   }
 
+  if (session?.user?.id) {
+    return (
+      <Wrapper>
+        <p>Redirecting...</p>
+      </Wrapper>
+    );
+  }
+
   return (
     <Wrapper>
       <form action={googleSigninAction}>

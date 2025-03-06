@@ -1,45 +1,128 @@
-async function fetchQuestions(params: URLSearchParams) {
-  const url = `${process.env.BASE_URL}/api/questions?${params.toString()}`;
-  const res = await fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    cache: "force-cache",
-  });
+import Link from "next/link";
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch questions");
-  }
+// constants
+import { getStatusIcon } from "@/constants/statuses";
 
-  return res.json();
+// types
+import { Question } from "@/types/types";
+
+// components
+import QuestionsHeader from "./shared/QuestionsHeader";
+import removeQuestionAction from "@/actions/removeQuestionAction";
+import saveQuestionAction from "@/actions/saveQuestionAction";
+import RemoveQuestionButton from "./RemoveQuestionButton";
+import SaveQuestionButton from "./SaveQuestionButton";
+
+interface QuestionListProps {
+  questions: Question[];
+  isFilterApplied: string | undefined;
 }
 
 export default async function QuestionList({
-  userId,
-  currentPage,
-  currentStatus,
-  currentDifficulty,
-  currentTopic,
-}: {
-  userId: string | undefined;
-  currentPage: string | undefined;
-  currentStatus: string | undefined;
-  currentDifficulty: string | undefined;
-  currentTopic: string | undefined;
-}) {
-  // Construct URLSearchParams with query parameters
-  const params = new URLSearchParams({
-    ...(userId && { userId }),
-    ...(currentStatus && { status: currentStatus }),
-    ...(currentDifficulty && { difficulty: currentDifficulty }),
-    ...(currentTopic && { topic: currentTopic }),
-    page: String(currentPage || 1),
-    limit: "10",
-  });
+  questions,
+  isFilterApplied,
+}: QuestionListProps) {
+  if (questions.length === 0 && !isFilterApplied) {
+    return <p className="text-xl mt-8">No questions found!</p>;
+  }
 
-  // Fetch questions using the constructed params
-  const questions = await fetchQuestions(params);
+  if (questions.length === 0 && isFilterApplied) {
+    return (
+      <p className="text-xl mt-8">
+        No questions found! Try using differnt filters.
+      </p>
+    );
+  }
 
-  return <div>{JSON.stringify(questions)}</div>;
+  return (
+    <div className="mt-8">
+      <QuestionsHeader text="Questions" />
+      <div className="border-x">
+        {questions.map(
+          ({ _id, status, topicName, difficulty, isSaved }, index) => {
+            const StatusIcon = getStatusIcon(status);
+
+            // Define colors statically
+            let statusIconColor = "";
+
+            if (status === "TODO") {
+              statusIconColor = "text-blue-600";
+            } else if (status === "SOLVED") {
+              statusIconColor = "text-emerald-700";
+            } else if (status === "ATTEMPTED") {
+              statusIconColor = "text-orange-600";
+            }
+
+            // Define colors statically
+            let difficultyTextColor = "";
+
+            if (difficulty === "EASY") {
+              difficultyTextColor = "text-teal-700";
+            } else if (difficulty === "MEDIUM") {
+              difficultyTextColor = "text-yellow-700";
+            } else if (difficulty === "HARD") {
+              difficultyTextColor = "text-red-600";
+            }
+
+            return (
+              <div
+                key={_id}
+                className="w-full border-b p-4 sm:p-6 flex flex-row justify-between sm:justify-normal"
+              >
+                <div className="w-full sm:w-[calc(100%-97.27px+3rem+87.38px+2rem)] flex sm:items-center flex-col-reverse sm:flex-row justify-between sm:justify-normal">
+                  {/* Status */}
+                  <span className="sm:w-[calc(97.27px+3rem)] flex items-center">
+                    {StatusIcon && (
+                      <StatusIcon
+                        className={`text-xl mr-2 ${statusIconColor}`}
+                      />
+                    )}
+                    <span>
+                      {status.charAt(0) +
+                        status.substring(1).toLocaleLowerCase()}
+                    </span>
+                  </span>
+
+                  {/* Topic */}
+                  <div className="sm:w-[calc(100%-97.28px+4rem)]">
+                    <div className="w-fit flex items-cente">
+                      <span className="mr-1 font-medium">{index + 1}.</span>
+                      <Link
+                        href={`/pages/questions/${_id}`}
+                        className=" text-blue-600 underline"
+                      >
+                        {topicName}
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="sm:w-[calc(55.38px+32px+2rem)] sm:mt-0 flex flex-col sm:flex-row items-end sm:items-center justify-between sm:justify-normal">
+                  {/* Difficulty */}
+                  <span
+                    className={`sm:w-[calc(55.38px)] flex justify-end ${difficultyTextColor}`}
+                  >
+                    {difficulty.charAt(0) +
+                      difficulty.substring(1).toLocaleLowerCase()}
+                  </span>
+
+                  {isSaved ? (
+                    <form action={removeQuestionAction}>
+                      <input type="hidden" name="questionID" value={_id} />
+                      <RemoveQuestionButton />
+                    </form>
+                  ) : (
+                    <form action={saveQuestionAction}>
+                      <input type="hidden" name="questionID" value={_id} />
+                      <SaveQuestionButton />
+                    </form>
+                  )}
+                </div>
+              </div>
+            );
+          }
+        )}
+      </div>
+    </div>
+  );
 }
