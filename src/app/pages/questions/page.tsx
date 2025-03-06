@@ -18,6 +18,7 @@ async function fetchQuestions(params: URLSearchParams) {
     headers: {
       "Content-Type": "application/json",
     },
+    cache: "force-cache",
   });
 
   if (!res.ok) {
@@ -54,7 +55,6 @@ export default async function QuestionsPage({
 
   // Fetch questions using the constructed params
   const questions = await fetchQuestions(params);
-  console.log(questions);
 
-  return <Container>Questions Page</Container>;
+  return <Container>{JSON.stringify(questions)}</Container>;
 }

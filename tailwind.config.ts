@@ -9,11 +9,11 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: "#000",
+        primary: "#001E2B",
         hover: "#333",
       },
       backgroundColor: {
-        primary: "#000",
+        primary: "#001E2B",
         hover: "#333",
       },
       borderColor: {
