@@ -30,7 +30,7 @@ export default function QuestionListSkeleton({
         {Array.from({ length: 10 }).map((_, index) => (
           <div
             key={index}
-            className={`block px-4 py-6 rounded-custom ${
+            className={`block px-4 py-6 ${
               index % 2 === 0 ? "bg-white" : "skeleton"
             } text-transparent`}
           >
