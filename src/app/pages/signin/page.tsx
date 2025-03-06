@@ -1,7 +1,5 @@
-"use client";
-
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
+import { auth } from "@/auth";
 
 // Actions
 import { googleSigninAction, githubSigninAction } from "@/actions/signInAction";
@@ -10,9 +8,6 @@ import { googleSigninAction, githubSigninAction } from "@/actions/signInAction";
 import Container from "@/components/shared/Container";
 import GoogleSignInButton from "@/components/GoogleSigninButton";
 import GitHubSignInButton from "@/components/GithubSigninButton";
-
-// 3rd Party
-import { useSession } from "next-auth/react";
 
 function Wrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -27,40 +22,13 @@ function Wrapper({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function SigninPage() {
-  const { data: session, status: sessionStatus } = useSession();
-  const router = useRouter();
+export default async function SigninPage() {
+  // Fetch session
+  const session = await auth();
+  const userId = session?.user?.id;
 
-  // Redirect to home if the user is already signed in
-  useEffect(() => {
-    if (sessionStatus === "authenticated" && session?.user?.id) {
-      router.push(`/pages/questions?page=1`);
-    }
-  }, [sessionStatus, session?.user?.id, router]);
-
-  if (sessionStatus === "loading") {
-    return (
-      <Wrapper>
-        {[1, 2].map((_, index) => (
-          <button
-            key={index}
-            type="submit"
-            className="skeleton text-transparent w-full px-4 h-[60px] border border-transparent rounded-custom"
-          >
-            <span className="ml-4">Sign in with Google</span>
-          </button>
-        ))}
-      </Wrapper>
-    );
-  }
-
-  if (session?.user?.id) {
-    return (
-      <Wrapper>
-        <p>Redirecting...</p>
-      </Wrapper>
-    );
-  }
+  // If user not signed in redirect to signin page
+  if (userId) redirect("/pages/questions?page=1");
 
   return (
     <Wrapper>

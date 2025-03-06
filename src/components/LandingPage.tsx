@@ -1,17 +1,13 @@
-"use client";
-
 import Link from "next/link";
-
-// hooks
-import { useSession } from "next-auth/react";
 
 // components
 import Container from "@/components/shared/Container";
 
-export default function LandingPage() {
-  const { data: session, status } = useSession();
-  const userID = session?.user?.id;
-
+export default function LandingPage({
+  userId,
+}: {
+  userId: string | undefined;
+}) {
   return (
     <Container>
       <header className="flex flex-col items-center">
@@ -21,18 +17,12 @@ export default function LandingPage() {
 
         <p>Your go to platform for learning javascript</p>
 
-        {status === "loading" ? (
-          <span className="skeleton my-8 px-8 py-3 rounded-custom text-transparent">
-            Start learning
-          </span>
-        ) : (
-          <Link
-            href={userID ? "/pages/questions?page=1" : "/login"}
-            className="my-8 bg-primary text-white px-8 py-3 rounded-custom hover:tracking-widest transition-all"
-          >
-            Start Learning
-          </Link>
-        )}
+        <Link
+          href={userId ? "/pages/questions?page=1" : "/login"}
+          className="my-8 bg-primary text-white px-8 py-3 rounded-custom hover:tracking-widest transition-all"
+        >
+          Start Learning
+        </Link>
       </header>
 
       <section className="mt-6 grid gap-8 sm:grid-cols-2">

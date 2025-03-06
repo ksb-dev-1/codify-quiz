@@ -12,10 +12,11 @@ export const metadata: Metadata = {
 };
 
 export default async function SavedPage() {
-  // Fetch the session and extract the user ID
+  // Fetch session
   const session = await auth();
   const userId = session?.user?.id;
 
+  // If user not signed in redirect to signin page
   if (!userId) redirect("/pages/signin");
 
   return <Container>Saved Page</Container>;

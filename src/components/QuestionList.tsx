@@ -39,7 +39,7 @@ export default async function QuestionList({
       <QuestionsHeader text="Questions" />
       <div className="border-x">
         {questions.map(
-          ({ _id, status, topicName, difficulty, isSaved }, index) => {
+          ({ id, status, topicName, difficulty, isSaved }, index) => {
             const StatusIcon = getStatusIcon(status);
 
             // Define colors statically
@@ -66,7 +66,7 @@ export default async function QuestionList({
 
             return (
               <div
-                key={_id}
+                key={id}
                 className="w-full border-b p-4 sm:p-6 flex flex-row justify-between sm:justify-normal"
               >
                 <div className="w-full sm:w-[calc(100%-97.27px+3rem+87.38px+2rem)] flex sm:items-center flex-col-reverse sm:flex-row justify-between sm:justify-normal">
@@ -88,7 +88,7 @@ export default async function QuestionList({
                     <div className="w-fit flex items-cente">
                       <span className="mr-1 font-medium">{index + 1}.</span>
                       <Link
-                        href={`/pages/questions/${_id}`}
+                        href={`/pages/questions/${id}`}
                         className=" text-blue-600 underline"
                       >
                         {topicName}
@@ -108,12 +108,12 @@ export default async function QuestionList({
 
                   {isSaved ? (
                     <form action={removeQuestionAction}>
-                      <input type="hidden" name="questionID" value={_id} />
+                      <input type="hidden" name="questionID" value={id} />
                       <RemoveQuestionButton />
                     </form>
                   ) : (
                     <form action={saveQuestionAction}>
-                      <input type="hidden" name="questionID" value={_id} />
+                      <input type="hidden" name="questionID" value={id} />
                       <SaveQuestionButton />
                     </form>
                   )}

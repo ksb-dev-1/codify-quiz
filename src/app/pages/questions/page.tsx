@@ -123,9 +123,7 @@ async function QuestionsPage({
   const topics: Topic[] = topicsData?.topics || [];
 
   return (
-    <Suspense
-      fallback={<QuestionListSkeleton text="Questions" marginTop="8" />}
-    >
+    <>
       <div className="w-full grid md:grid-cols-2 gap-4">
         <div className="grid grid-cols-2 gap-4">
           <StatusFilter />
@@ -145,9 +143,13 @@ async function QuestionsPage({
         />
       )}
 
-      <QuestionList questions={questions} isFilterApplied={isFilterApplied} />
+      <Suspense
+        fallback={<QuestionListSkeleton text="Questions" marginTop="8" />}
+      >
+        <QuestionList questions={questions} isFilterApplied={isFilterApplied} />
+      </Suspense>
 
-      <div className="flex justify-start">
+      <div className="flex justify-start\">
         {totalPages > 1 && (
           <Pagination
             //questionsLoading={questionsLoading}
@@ -156,6 +158,6 @@ async function QuestionsPage({
           />
         )}
       </div>
-    </Suspense>
+    </>
   );
 }
