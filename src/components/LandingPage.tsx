@@ -10,7 +10,7 @@ export default function LandingPage({
 }) {
   return (
     <Container>
-      <header className="flex flex-col items-center">
+      <header className="flex flex-col items-center slide-in">
         <h3 className="w-fit text-3xl font-extrabold py-4">
           Welcome to Codify
         </h3>
@@ -25,7 +25,7 @@ export default function LandingPage({
         </Link>
       </header>
 
-      <section className="mt-6 grid gap-8 sm:grid-cols-2">
+      <section className="mt-6 grid gap-8 sm:grid-cols-2 fade-in">
         <div className="border bg-white rounded-custom p-8">
           <h3 className="font-bold text-lg">Practice</h3>
           <p className="mt-2">
