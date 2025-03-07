@@ -68,3 +68,16 @@ input[type="number"]::-webkit-inner-spin-button {
     opacity: 1;
   }
 }
+
+/* Customize the progress bar */
+#nprogress .bar {
+  background: #ff4757; /* Red color like Mosh's site */
+  height: 4px;
+  position: fixed;
+  top: 0;
+  right: 0%;
+  left: auto;
+  width: 100%;
+  transform-origin: right center;
+  z-index: 100;
+}
