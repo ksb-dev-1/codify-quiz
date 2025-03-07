@@ -37,6 +37,7 @@ async function fetchQuestions(questionsParams: URLSearchParams) {
   const url = `${
     process.env.BASE_URL
   }/api/questions?${questionsParams.toString()}`;
+
   const res = await fetch(url, {
     method: "GET",
     headers: {

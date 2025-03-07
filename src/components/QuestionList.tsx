@@ -108,12 +108,12 @@ export default async function QuestionList({
 
                   {isSaved ? (
                     <form action={removeQuestionAction}>
-                      <input type="hidden" name="questionID" value={id} />
+                      <input type="hidden" name="questionId" value={id} />
                       <RemoveQuestionButton />
                     </form>
                   ) : (
                     <form action={saveQuestionAction}>
-                      <input type="hidden" name="questionID" value={id} />
+                      <input type="hidden" name="questionId" value={id} />
                       <SaveQuestionButton />
                     </form>
                   )}
