@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
@@ -5,6 +6,7 @@ import { auth } from "@/auth";
 
 // components
 import Container from "@/components/shared/Container";
+import QuestionListSkeleton from "@/components/skeletons/QuestionListSkeleton";
 import SavedQuestionList from "@/components/SavedQuestionList";
 
 export const metadata: Metadata = {
@@ -50,7 +52,9 @@ export default async function SavedPage() {
 
   return (
     <Container>
-      <SavedQuestionList savedQuestions={savedQuestions} />
+      <Suspense fallback={<QuestionListSkeleton text="Saved Questions" />}>
+        <SavedQuestionList savedQuestions={savedQuestions} />
+      </Suspense>
     </Container>
   );
 }

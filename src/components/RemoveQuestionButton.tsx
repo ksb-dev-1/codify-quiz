@@ -17,9 +17,9 @@ export default function RemoveQuestionButton() {
       className="mt-6 sm:mt-0 sm:w-[calc(32px+2rem)] flex justify-end"
     >
       {pending ? (
-        <Loader className="w-5 h-5 animate-spin text-pink-600" />
+        <Loader className="w-6 h-6 animate-spin text-pink-600" />
       ) : (
-        <VscHeartFilled className="text-2xl text-pink-600 cursor-pointer" />
+        <VscHeartFilled className="w-6 h-6 text-pink-600 cursor-pointer" />
       )}
     </button>
   );

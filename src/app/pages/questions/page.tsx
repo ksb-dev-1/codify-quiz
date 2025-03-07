@@ -107,7 +107,7 @@ async function QuestionsPage({
     ...(difficulty && { difficulty }),
     ...(topic && { topic }),
     page: String(page || 1),
-    limit: "10",
+    limit: "12",
   });
 
   const topicsParams = new URLSearchParams({
@@ -150,13 +150,9 @@ async function QuestionsPage({
         <QuestionList questions={questions} isFilterApplied={isFilterApplied} />
       </Suspense>
 
-      <div className="flex justify-start\">
+      <div className="flex justify-start">
         {totalPages > 1 && (
-          <Pagination
-            //questionsLoading={questionsLoading}
-            currentPage={Number(page)}
-            totalPages={totalPages}
-          />
+          <Pagination currentPage={Number(page)} totalPages={totalPages} />
         )}
       </div>
     </>

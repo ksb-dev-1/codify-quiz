@@ -17,9 +17,9 @@ export default function SaveQuestionButton() {
       className="mt-6 sm:mt-0 sm:w-[calc(32px+2rem)] flex justify-end"
     >
       {pending ? (
-        <Loader className="w-5 h-5 animate-spin text-pink-600" />
+        <Loader className="w-6 h-6 animate-spin text-pink-600" />
       ) : (
-        <VscHeart className="text-2xl text-pink-600 cursor-pointer" />
+        <VscHeart className="w-6 h-6 text-pink-600 cursor-pointer" />
       )}
     </button>
   );

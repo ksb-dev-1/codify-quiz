@@ -87,7 +87,7 @@ export default function Navbar() {
         </div>
 
         <div className="hidden sm:flex skeleton h-10 w-10 rounded-full"></div>
-        <div className="flex sm:hidden skeleton h-8 w-8 rounded-custom"></div>
+        <div className="flex sm:hidden skeleton h-10 w-10 rounded-custom"></div>
       </NavbarWrapper>
     );
   }
@@ -153,26 +153,29 @@ export default function Navbar() {
                 className="flex items-center px-4 py-2 rounded-custom hover:bg-slate-200 transition-colors"
               >
                 <FiLogOut className="mr-4" />
-                Sign out
+                Logout
               </button>
             </div>
           </div>
-          <GrMenu
+          <div
             onClick={() => setIsSideNavOpen(true)}
-            className="cursor-pointer flex sm:hidden text-2xl hover:text-hover transition-colors"
-          />
+            className="flex sm:hidden relative cursor-pointer w-10 h-10 rounded-custom border hover:bg-slate-200 transition-colors"
+          >
+            <GrMenu className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl" />
+          </div>
         </NavbarWrapper>
 
         {/* Side Navigation Overlay */}
         <div
           className={`${
             isSideNavOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-          } transition-opacity duration-300 fixed top-0 left-0 right-0 bottom-0 bg-[rgba(0,0,0,0.5)] z-20`}
+          } transition-opacity duration-300 fixed top-0 left-0 right-0 bottom-0 bg-[rgb(0,30,43,0.5)] z-20`}
         >
-          <div className="absolute top-4 right-4 h-10 w-10 rounded-custom cursor-pointer bg-red-600 hover:bg-red-400 transition-colors">
+          {/* Close Button */}
+          <div className="absolute top-4 right-4 h-10 w-10 rounded-custom cursor-pointer bg-primary text-white hover:bg-hover transition-colors">
             <IoClose
               onClick={() => setIsSideNavOpen(false)}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-2xl "
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl "
             />
           </div>
           {/* Side Navigation */}

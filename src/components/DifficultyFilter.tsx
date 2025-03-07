@@ -39,7 +39,7 @@ export default function DifficultyFilter() {
       <div
         className={`bg-white w-full mt-2 z-10 border shadow-xl ${
           isOpen ? "scale-1" : "scale-0"
-        } absolute rounded-custom px-2 origin-top-left transition-transform`}
+        } absolute rounded-custom p-2 origin-top-left transition-transform`}
       >
         {difficulties.map(({ difficulty }) => {
           const newParams = new URLSearchParams(searchParams.toString());
@@ -62,7 +62,7 @@ export default function DifficultyFilter() {
               key={difficulty}
               onClick={() => setIsOpen(false)}
               href={`?${newParams.toString()}`}
-              className={`${difficultyTextColor} flex items-center cursor-pointer my-2 px-4 py-2 hover:bg-slate-200 transition-colors rounded-custom`}
+              className={`${difficultyTextColor} flex items-center cursor-pointer px-4 py-2 hover:bg-slate-200 transition-colors rounded-custom`}
             >
               {difficulty.charAt(0) +
                 difficulty.substring(1).toLocaleLowerCase()}

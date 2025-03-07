@@ -31,11 +31,11 @@ const Pagination = ({ currentPage, totalPages }: PaginationProps) => {
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className={`${
+          className={`border ${
             currentPage === 1
               ? "cursor-not-allowed text-[#999]"
-              : "cursor-pointer bg-primary text-white hover:bg-hover transition-colors"
-          } border px-4 py-2 mr-1 rounded-custom`}
+              : "cursor-pointer bg-primary border-primary text-white hover:bg-hover transition-colors"
+          } px-4 py-2 mr-1 rounded-custom`}
         >
           Prev
         </button>
@@ -43,11 +43,11 @@ const Pagination = ({ currentPage, totalPages }: PaginationProps) => {
           <button
             key={visiblePage}
             onClick={() => handlePageChange(visiblePage)}
-            className={`${
+            className={`border ${
               currentPage === visiblePage
-                ? "cursor-pointer bg-primary text-white hover:bg-hover"
+                ? "cursor-pointer bg-primary border-primary text-white hover:bg-hover"
                 : "hover:bg-slate-200"
-            } border px-4 py-2 mx-1 rounded-custom transition-colors`}
+            } px-4 py-2 mx-1 rounded-custom transition-colors`}
           >
             {visiblePage}
           </button>
@@ -55,11 +55,11 @@ const Pagination = ({ currentPage, totalPages }: PaginationProps) => {
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className={`${
+          className={`border ${
             currentPage === totalPages
               ? "cursor-not-allowed text-[#999]"
-              : "cursor-pointer bg-primary text-white hover:bg-hover transition-colors"
-          } border px-4 py-2 ml-1 rounded-custom`}
+              : "cursor-pointer bg-primary border-primary text-white hover:bg-hover transition-colors"
+          } px-4 py-2 ml-1 rounded-custom`}
         >
           Next
         </button>
