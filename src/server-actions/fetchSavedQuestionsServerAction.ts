@@ -1,18 +1,14 @@
-import { NextRequest, NextResponse } from "next/server";
+"use server";
+
 import { prisma } from "@/lib/prisma";
+import { unstable_cache } from "next/cache";
 
-export async function GET(req: NextRequest) {
+async function fetchSavedQuestionsFromDB(userId: string) {
+  if (!userId) {
+    return { success: false, message: "Unauthorized", status: 401 };
+  }
+
   try {
-    const { searchParams } = new URL(req.url);
-    const userId = searchParams.get("userId");
-
-    if (!userId) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
     // Fetch saved questions with details
     const savedQuestions = await prisma.savedQuestion.findMany({
       where: { userId },
@@ -31,10 +27,7 @@ export async function GET(req: NextRequest) {
     });
 
     if (savedQuestions.length === 0) {
-      return NextResponse.json(
-        { success: true, savedQuestions: [] },
-        { status: 200 }
-      );
+      return { success: true, savedQuestions: [], status: "success" };
     }
 
     // Extract question IDs
@@ -57,7 +50,7 @@ export async function GET(req: NextRequest) {
       questionStatuses.map((qs) => [qs.questionId, qs.status])
     );
 
-    // Format saved questions with status and qNo
+    // Format saved questions with status
     const formattedSavedQuestions = savedQuestions.map((q) => ({
       id: q.question.id,
       qNo: q.question.qNo,
@@ -68,24 +61,30 @@ export async function GET(req: NextRequest) {
       status: statusMap.get(q.question.id) || "TODO",
     }));
 
-    return NextResponse.json(
-      {
-        success: true,
-        savedQuestions: formattedSavedQuestions,
-        status: "success",
-      },
-      { status: 200 }
-    );
+    return {
+      success: true,
+      savedQuestions: formattedSavedQuestions,
+      status: "success",
+    };
   } catch (error) {
     console.error("Failed to fetch saved questions:", error);
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Failed to fetch saved questions",
-        error: error instanceof Error ? error.message : "Unknown error",
-        status: "error",
-      },
-      { status: 500 }
-    );
+    return {
+      success: false,
+      message: "Failed to fetch saved questions",
+      error: error instanceof Error ? error.message : "Unknown error",
+      status: "error",
+    };
   }
 }
+
+// Cached function
+const fetchSavedQuestionsServerAction = unstable_cache(
+  fetchSavedQuestionsFromDB,
+  ["saved-questions"], // This is the tag that must match in revalidateTag
+  {
+    revalidate: false, // Keeps data cached indefinitely
+    tags: ["saved-questions"], // Explicitly add tags
+  }
+);
+
+export default fetchSavedQuestionsServerAction;

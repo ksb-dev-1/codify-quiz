@@ -4,6 +4,9 @@ import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
 
+// server-actions
+import fetchSavedQuestionsServerAction from "@/server-actions/fetchSavedQuestionsServerAction";
+
 // components
 import Container from "@/components/shared/Container";
 import QuestionListSkeleton from "@/components/skeletons/QuestionListSkeleton";
@@ -14,40 +17,16 @@ export const metadata: Metadata = {
   description: "List of saved questions by user",
 };
 
-async function fetchSavedQuestions(savedQuestionsParams: URLSearchParams) {
-  const url = `${
-    process.env.BASE_URL
-  }/api/questions/saved?${savedQuestionsParams.toString()}`;
-
-  const res = await fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    cache: "force-cache",
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch questions");
-  }
-
-  return res.json();
-}
-
 export default async function SavedPage() {
   // Fetch session
   const session = await auth();
   const userId = session?.user?.id;
 
-  // If user not signed in redirect to signin page
+  // If user not signed in, redirect to sign-in page
   if (!userId) redirect("/pages/signin");
 
-  const savedQuestionsParams = new URLSearchParams({
-    ...(userId && { userId }),
-  });
-
-  const savedQuestionsData = await fetchSavedQuestions(savedQuestionsParams);
-
+  // Fetch saved questions (pass userId directly)
+  const savedQuestionsData = await fetchSavedQuestionsServerAction(userId);
   const savedQuestions = savedQuestionsData?.savedQuestions || [];
 
   return (

@@ -1,13 +1,13 @@
 import { Suspense } from "react";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-
 import { auth } from "@/auth";
 
-// types
-import { Question, Topic } from "@/types/types";
+// Server Actions
+import fetchQuestionsServerAction from "@/server-actions/fetchQuestionsServerAction";
+import fetchTopicsServerAction from "@/server-actions/fetchTopicsServerAction";
 
-// components
+// Components
 import Container from "@/components/shared/Container";
 import QuestionListSkeleton from "@/components/skeletons/QuestionListSkeleton";
 import DifficultyFilter from "@/components/DifficultyFilter";
@@ -33,53 +33,15 @@ interface QuestionsPageProps {
   };
 }
 
-async function fetchQuestions(questionsParams: URLSearchParams) {
-  const url = `${
-    process.env.BASE_URL
-  }/api/questions?${questionsParams.toString()}`;
-
-  const res = await fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    cache: "force-cache",
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch questions");
-  }
-
-  return res.json();
-}
-
-async function fetchTopics(topicsParams: URLSearchParams) {
-  const url = `${process.env.BASE_URL}/api/topics?${topicsParams.toString()}`;
-  const res = await fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    cache: "force-cache",
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch topics");
-  }
-
-  return res.json();
-}
-
 export default async function QuestionsPageWrapper({
   searchParams,
 }: {
   searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {
-  // Fetch session
+  // ✅ Fetch session
   const session = await auth();
   const userId = session?.user?.id;
 
-  // If user not signed in redirect to signin page
   if (!userId) redirect("/pages/signin");
 
   const currentSearchParams = await searchParams;
@@ -101,27 +63,22 @@ async function QuestionsPage({
   const { page, status, difficulty, topic } = currentSearchParams || {};
   const isFilterApplied = page || status || difficulty || topic;
 
-  const questionsParams = new URLSearchParams({
-    ...(userId && { userId }),
-    ...(status && { status }),
-    ...(difficulty && { difficulty }),
-    ...(topic && { topic }),
-    page: String(page || 1),
-    limit: "12",
-  });
-
-  const topicsParams = new URLSearchParams({
-    ...(userId && { userId }),
-  });
-
-  // Fetch questions and topics
+  // ✅ Fetch data using Server Actions
   const [questionsData, topicsData] = await Promise.all([
-    fetchQuestions(questionsParams),
-    fetchTopics(topicsParams),
+    fetchQuestionsServerAction({
+      userId,
+      status,
+      difficulty,
+      topic,
+      page: Number(page) || 1,
+      limit: 12,
+    }),
+    fetchTopicsServerAction(userId),
   ]);
-  const questions: Question[] = questionsData?.questions || [];
+
+  const questions = questionsData?.questions || [];
   const totalPages = questionsData?.totalPages || 1;
-  const topics: Topic[] = topicsData?.topics || [];
+  const topics = topicsData?.topics || [];
 
   return (
     <>

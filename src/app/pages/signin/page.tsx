@@ -2,7 +2,10 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 
 // Actions
-import { googleSigninAction, githubSigninAction } from "@/actions/signInAction";
+import {
+  googleSigninServerAction,
+  githubSigninServerAction,
+} from "@/server-actions/signinServerActions";
 
 // Components
 import Container from "@/components/shared/Container";
@@ -32,10 +35,10 @@ export default async function SigninPage() {
 
   return (
     <Wrapper>
-      <form action={googleSigninAction}>
+      <form action={googleSigninServerAction}>
         <GoogleSignInButton />
       </form>
-      <form action={githubSigninAction}>
+      <form action={githubSigninServerAction}>
         <GitHubSignInButton />
       </form>
     </Wrapper>

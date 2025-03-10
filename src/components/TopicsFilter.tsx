@@ -7,15 +7,17 @@ import { useSearchParams } from "next/navigation";
 // hooks
 import { useHandleOutsideClick } from "@/hooks/useHandleOutsideClick";
 
-// types
-import { Topic } from "@/types/types";
-
 // 3rd party
 import { IoCaretDown } from "react-icons/io5";
 
-interface TopicsFilterProps {
+type Topic = {
+  name: string;
+  id: string;
+};
+
+type TopicsFilterProps = {
   topics: Topic[];
-}
+};
 
 export default function TopicsFilter({ topics }: TopicsFilterProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);

@@ -1,22 +1,44 @@
 import Link from "next/link";
 
+// server-actions
+import toggleSaveQuestionServerAction from "@/server-actions/toggleSaveQuestionServerAction";
+
 // constants
 import { getStatusIcon } from "@/constants/statuses";
 
-// types
-import { Question } from "@/types/types";
-
 // components
-import QuestionsHeader from "./shared/QuestionsHeader";
-import removeQuestionAction from "@/actions/removeQuestionAction";
-import saveQuestionAction from "@/actions/saveQuestionAction";
-import RemoveQuestionButton from "./RemoveQuestionButton";
-import SaveQuestionButton from "./SaveQuestionButton";
+import QuestionsHeader from "@/components/shared/QuestionsHeader";
+import ToggleSaveQuestionButton from "@/components/ToggleSaveButton";
 
-interface QuestionListProps {
+// 3rd party
+import { DifficultyLevel, QuestionStatusEnum } from "@prisma/client";
+
+type Question = {
+  id: string;
+  qNo: number;
+  difficulty: DifficultyLevel;
+  isPremium: boolean;
+  topicName: string;
+  status: QuestionStatusEnum;
+  isSaved: boolean;
+};
+
+type QuestionListProps = {
   questions: Question[];
   isFilterApplied: string | undefined;
-}
+};
+
+const statusColors = {
+  TODO: "text-primary",
+  SOLVED: "text-emerald-700",
+  ATTEMPTED: "text-orange-600",
+};
+
+const difficultyColors = {
+  EASY: "text-teal-700",
+  MEDIUM: "text-yellow-700",
+  HARD: "text-red-600",
+};
 
 export default async function QuestionList({
   questions,
@@ -42,27 +64,8 @@ export default async function QuestionList({
           ({ id, qNo, status, topicName, difficulty, isSaved }) => {
             const StatusIcon = getStatusIcon(status);
 
-            // Define colors statically
-            let statusIconColor = "";
-
-            if (status === "TODO") {
-              statusIconColor = "text-blue-600";
-            } else if (status === "SOLVED") {
-              statusIconColor = "text-emerald-700";
-            } else if (status === "ATTEMPTED") {
-              statusIconColor = "text-orange-600";
-            }
-
-            // Define colors statically
-            let difficultyTextColor = "";
-
-            if (difficulty === "EASY") {
-              difficultyTextColor = "text-teal-700";
-            } else if (difficulty === "MEDIUM") {
-              difficultyTextColor = "text-yellow-700";
-            } else if (difficulty === "HARD") {
-              difficultyTextColor = "text-red-600";
-            }
+            const statusIconColor = statusColors[status] || "";
+            const difficultyTextColor = difficultyColors[difficulty] || "";
 
             return (
               <div
@@ -106,17 +109,10 @@ export default async function QuestionList({
                       difficulty.substring(1).toLocaleLowerCase()}
                   </span>
 
-                  {isSaved ? (
-                    <form action={removeQuestionAction}>
-                      <input type="hidden" name="questionId" value={id} />
-                      <RemoveQuestionButton />
-                    </form>
-                  ) : (
-                    <form action={saveQuestionAction}>
-                      <input type="hidden" name="questionId" value={id} />
-                      <SaveQuestionButton />
-                    </form>
-                  )}
+                  <form action={toggleSaveQuestionServerAction}>
+                    <input type="hidden" name="questionId" value={id} />
+                    <ToggleSaveQuestionButton isSaved={isSaved} />
+                  </form>
                 </div>
               </div>
             );

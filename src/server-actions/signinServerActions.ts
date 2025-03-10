@@ -2,10 +2,10 @@
 
 import { signIn } from "@/auth";
 
-export async function googleSigninAction() {
+export async function googleSigninServerAction() {
   return await signIn("google");
 }
 
-export async function githubSigninAction() {
+export async function githubSigninServerAction() {
   return await signIn("github");
 }
