@@ -9,7 +9,7 @@ import fetchSavedQuestionsServerAction from "@/server-actions/fetchSavedQuestion
 
 // components
 import Container from "@/components/shared/Container";
-import QuestionListSkeleton from "@/components/skeletons/QuestionListSkeleton";
+import SavedQuestionListSkeleton from "@/components/skeletons/SavedQuestionListSkeleton";
 import SavedQuestionList from "@/components/SavedQuestionList";
 
 export const metadata: Metadata = {
@@ -31,7 +31,7 @@ export default async function SavedPage() {
 
   return (
     <Container>
-      <Suspense fallback={<QuestionListSkeleton text="Saved Questions" />}>
+      <Suspense fallback={<SavedQuestionListSkeleton text="Saved Questions" />}>
         <SavedQuestionList savedQuestions={savedQuestions} />
       </Suspense>
     </Container>

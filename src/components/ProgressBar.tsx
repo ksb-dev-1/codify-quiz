@@ -10,7 +10,7 @@ export default function ProgressBar() {
 
   useEffect(() => {
     NProgress.start(); // Start progress bar when route changes
-    const timer = setTimeout(() => NProgress.done(), 0); // Stop progress bar after short delay
+    const timer = setTimeout(() => NProgress.done(), 500); // Stop progress bar after short delay
 
     return () => {
       clearTimeout(timer);

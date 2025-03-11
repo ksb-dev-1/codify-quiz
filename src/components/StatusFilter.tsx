@@ -1,46 +1,34 @@
 "use client";
 
-import { useState, useRef } from "react";
-import Link from "next/link";
+import { Dispatch, SetStateAction } from "react";
 import { useSearchParams } from "next/navigation";
 
 // Constants
-import { statuses, getStatusIcon } from "@/constants/statuses";
+import { statuses, getStatusIcon, getStatusColor } from "@/constants/statuses";
 
-// Hooks
-import { useHandleOutsideClick } from "@/hooks/useHandleOutsideClick";
+// 3rd party
+import clsx from "clsx";
+import { IoIosCheckmark } from "react-icons/io";
 
-// 3rd Party Icons
-import { IoCaretDown } from "react-icons/io5";
+type StatusFilterProps = {
+  passedStatus: string | undefined;
+  setStatus: Dispatch<SetStateAction<string | undefined>>;
+};
 
-export default function StatusFilter() {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const dropDownRef = useRef<HTMLDivElement>(null);
+export default function StatusFilter({
+  passedStatus,
+  setStatus,
+}: StatusFilterProps) {
   const searchParams = useSearchParams();
 
-  useHandleOutsideClick(dropDownRef, setIsOpen);
+  const toggleStatus = (status: string) => {
+    setStatus((prevStatus) => (prevStatus === status ? "" : status));
+  };
 
   return (
-    <div ref={dropDownRef} className="relative w-full">
-      <div
-        onClick={() => setIsOpen((prev) => !prev)}
-        className="relative w-full cursor-pointer px-4 py-2 rounded-custom border"
-      >
-        <span>Status</span>
-        <span
-          className={`absolute top-3 right-2 ${
-            isOpen ? "rotate-180" : "rotate-0"
-          } transition-transform`}
-        >
-          <IoCaretDown />
-        </span>
-      </div>
-
-      <div
-        className={`bg-white w-full mt-2 z-10 border shadow-xl ${
-          isOpen ? "scale-1" : "scale-0"
-        } absolute rounded-custom p-2 origin-top-left transition-transform`}
-      >
+    <div className="relative w-full">
+      <p className="font-semibold text-xl mb-4">Status</p>
+      <div className="space-y-4">
         {statuses.map(({ status }) => {
           const newParams = new URLSearchParams(searchParams.toString());
           newParams.set("status", status);
@@ -48,33 +36,31 @@ export default function StatusFilter() {
 
           const StatusIcon = getStatusIcon(status);
 
-          // Define colors statically
-          let statusIconColor = "";
-
-          if (status === "TODO") {
-            statusIconColor = "text-blue-600";
-          } else if (status === "SOLVED") {
-            statusIconColor = "text-emerald-700";
-          } else if (status === "ATTEMPTED") {
-            statusIconColor = "text-orange-600";
-          }
+          const statusIconColor = getStatusColor(status);
 
           return (
-            <Link
+            <button
               key={status}
-              onClick={() => setIsOpen(false)}
-              href={`?${newParams.toString()}`}
-              className="flex items-center cursor-pointer px-4 py-2 hover:bg-slate-200 transition-colors rounded-custom"
+              aria-label={status}
+              onClick={() => toggleStatus(status)}
+              className="flex items-center cursor-pointer hover:underline rounded-custom"
             >
-              {StatusIcon && (
-                <StatusIcon
-                  className={`text-base sm:text-xl mr-4 ${statusIconColor}`}
-                />
+              {passedStatus === status ? (
+                <span className="relative w-5 h-5 bg-primary text-white rounded-full mr-4">
+                  <IoIosCheckmark className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xl" />
+                </span>
+              ) : (
+                <span className="w-5 h-5 border rounded-full mr-4"></span>
               )}
+
               <span className="capitalize">
                 {status.charAt(0) + status.substring(1).toLocaleLowerCase()}
               </span>
-            </Link>
+
+              {StatusIcon && (
+                <StatusIcon className={clsx("text-xl ml-2", statusIconColor)} />
+              )}
+            </button>
           );
         })}
       </div>

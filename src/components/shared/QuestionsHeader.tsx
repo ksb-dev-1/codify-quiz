@@ -1,25 +1,29 @@
-export default function QuestionsHeader({ text }: { text: string }) {
+export default function QuestionsHeader({
+  text,
+  marginTop,
+}: {
+  text: string;
+  marginTop?: string;
+}) {
   return (
-    <>
-      <h1 className="font-semibold text-xl">{text}</h1>
-      <div className="mt-4 flex items-center justify-between sm:justify-normal px-4 sm:px-6 py-2 rounded-tl-custom rounded-tr-custom border border-primary bg-primary text-white">
-        <div className="sm:w-[calc(100%-97.28px+4rem+87.38px+2rem)] flex flex-col-reverse sm:flex-row sm:items-center justify-between sm:justify-normal">
-          <span className="mt-6 sm:mt-0 sm:w-[calc(97.27px+3rem)] flex items-center">
+    <div className={marginTop}>
+      <h1 className="flex sm:hidden font-semibold text-xl mb-4">{text}</h1>
+      <div className="w-full flex items-center justify-between sm:justify-normal px-4 sm:px-6 py-2 sm:py-3 rounded-custom border-primary bg-primary text-white">
+        <div className="w-full flex flex-col-reverse sm:flex-row sm:items-center justify-between sm:justify-normal">
+          <span className="mt-6 sm:mt-0 sm:w-[calc(42.85px+2rem)] flex items-center">
             Status
           </span>
-          <span className="sm:w-[calc(100%-97.27px+3rem)] flex items-center">
-            Topic
-          </span>
+          <span className="sm:w-full flex items-center">Topic</span>
         </div>
-        <div className="sm:w-[calc(55.38px+32px+2rem)] flex flex-col sm:flex-row sm:items-center justify-between sm:justify-normal">
-          <span className="sm:w-[calc(55.38px)] flex items-center justify-end">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between sm:justify-normal">
+          <span className="sm:w-[calc(64.81px+2rem)] flex items-center justify-end">
             Difficulty
           </span>
-          <div className="mt-6 sm:mt-0 sm:w-[calc(32px+2rem)] flex justify-end">
+          <span className="mt-6 sm:mt-0 sm:w-[calc(34.55px+2rem)] flex justify-end">
             Save
-          </div>
+          </span>
         </div>
       </div>
-    </>
+    </div>
   );
 }

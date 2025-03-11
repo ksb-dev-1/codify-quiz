@@ -3,7 +3,7 @@
 import { useFormStatus } from "react-dom";
 
 // 3rd party
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { VscHeart, VscHeartFilled } from "react-icons/vsc";
 
 export default function ToggleSaveQuestionButton({
@@ -20,7 +20,7 @@ export default function ToggleSaveQuestionButton({
         disabled={pending}
         className="mt-6 sm:mt-0 sm:w-[calc(32px+2rem)] flex justify-end"
       >
-        <Loader className="w-6 h-6 animate-spin text-pink-600" />
+        <Loader2 className="w-6 h-6 animate-spin text-pink-600" />
       </button>
     );
   }

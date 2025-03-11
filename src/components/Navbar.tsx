@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 // hooks
 import { useHeaderShadowOnScroll } from "@/hooks/useHeaderShadowOnScroll";
@@ -27,7 +28,7 @@ function NavbarWrapper({ children }: { children: React.ReactNode }) {
       ref={navbarRef}
       className="fixed z-10 bg-white top-0 left-0 right-0 border-b flex justify-center h-[4.5rem]"
     >
-      <nav className="max-w-4xl w-full p-4 flex items-center justify-between">
+      <nav className="max-w-5xl w-full p-4 flex items-center justify-between">
         <Link
           href="/"
           className="text-2xl font-extrabold hover:text-hover transition-colors"
@@ -43,11 +44,13 @@ function NavbarWrapper({ children }: { children: React.ReactNode }) {
 
 export default function Navbar() {
   const { data: session, status } = useSession();
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isSideNavOpen, setIsSideNavOpen] = useState<boolean>(false); // Set initial state to false
   const sideNavRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
   const title = "{Codify}";
+  const path = pathname.split("/")[2];
 
   useHandleOutsideClick(profileRef, setIsOpen);
   useHandleOutsideClick(sideNavRef, setIsSideNavOpen);
@@ -97,24 +100,48 @@ export default function Navbar() {
       <>
         <NavbarWrapper>
           <div className="hidden sm:flex items-center">
-            <Link
-              href="/pages/questions?page=1"
-              className="px-4 py-2 rounded-custom hover:bg-slate-200 transition-colors"
+            <div
+              className={`flex items-center justify-center ${
+                path === "questions"
+                  ? "border-b-2 border-primary"
+                  : "border-b-2 border-transparent"
+              } h-[72px]`}
             >
-              Questions
-            </Link>
-            <Link
-              href="/pages/saved"
-              className="px-4 py-2 rounded-custom hover:bg-slate-200 transition-colors mx-4"
+              <Link
+                href="/pages/questions?page=1"
+                className="hover:text-blue-700 transition-colors"
+              >
+                Questions
+              </Link>
+            </div>
+            <div
+              className={`flex items-center justify-center ${
+                path === "saved"
+                  ? "border-b-2 border-primary"
+                  : "border-b-2 border-transparent"
+              } h-[72px] mx-12`}
             >
-              Saved
-            </Link>
-            <Link
-              href="#"
-              className="px-4 py-2 rounded-custom hover:bg-slate-200 transition-colors"
+              <Link
+                href="/pages/saved"
+                className="hover:text-blue-700 transition-colors"
+              >
+                Saved
+              </Link>
+            </div>
+            <div
+              className={`flex items-center justify-center ${
+                path === "premium"
+                  ? "border-b-2 border-primary"
+                  : "border-b-2 border-transparent"
+              } h-[72px]`}
             >
-              Premium
-            </Link>
+              <Link
+                href="/pages/premium"
+                className="hover:text-blue-700 transition-colors"
+              >
+                Premium
+              </Link>
+            </div>
           </div>
 
           <div ref={profileRef} className="hidden sm:block relative ml-8">
@@ -186,7 +213,7 @@ export default function Navbar() {
             } absolute top-0 left-0 bottom-0 w-52 bg-white transition-transform duration-300 z-30`}
           >
             <div className="flex flex-col h-full">
-              <div className="w-full border-b h-[72px] flex flex-col items-start justify-center pl-4">
+              <div className="w-full border-b h-[72px] flex items-center justify-start pl-4">
                 <Link
                   href="/"
                   onClick={() => setIsSideNavOpen(false)}
@@ -195,7 +222,7 @@ export default function Navbar() {
                   {title}
                 </Link>
               </div>
-              <div className="flex flex-col items-start mt-8 px-4 space-y-2 text-xl">
+              <div className="flex flex-col items-start mt-4 px-4 space-y-2 text-xl">
                 <Link
                   href="/pages/questions?page=1"
                   onClick={() => setIsSideNavOpen(false)}

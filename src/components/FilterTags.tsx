@@ -29,9 +29,9 @@ function RemoveFilterButton({ filter }: { filter: string }) {
   return (
     <div
       onClick={() => removeFilter(filter)}
-      className="relative h-5 w-5 rounded-xl bg-primary text-white hover:bg-hover transition-colors"
+      className="relative h-5 w-5 rounded-full bg-primary text-white hover:bg-hover transition-colors"
     >
-      <IoCloseSharp className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer" />
+      <IoCloseSharp className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer text-sm" />
     </div>
   );
 }
@@ -47,11 +47,17 @@ export default function FilterTags({
 
   const StatusIcon = currentStatus && getStatusIcon(currentStatus);
 
+  let filterCount = 0;
+
+  if (currentStatus) filterCount++;
+  if (currentDifficulty) filterCount++;
+  if (currentTopic) filterCount++;
+
   // Define colors statically
   let statusColor = "";
 
   if (currentStatus === "TODO") {
-    statusColor = "text-blue-600";
+    statusColor = "text-primary";
   } else if (currentStatus === "SOLVED") {
     statusColor = "text-emerald-700";
   } else if (currentStatus === "ATTEMPTED") {
@@ -79,8 +85,8 @@ export default function FilterTags({
   };
 
   return (
-    <div className="flex justify-between mt-4">
-      <div className="flex items-center gap-4">
+    <div className="flex">
+      <div className="flex items-center flex-wrap gap-4">
         {/* Render status if found */}
         {currentStatus && (
           <div className="flex items-center px-3 py-1 transition-colors border rounded-custom">
@@ -114,17 +120,17 @@ export default function FilterTags({
             <RemoveFilterButton filter="topic" />
           </div>
         )}
-      </div>
 
-      {/* Clear filters */}
-      {(currentStatus || currentDifficulty || currentTopic) && (
-        <button
-          onClick={clearFilters}
-          className="px-3 py-1 rounded-custom bg-red-600 text-white border border-red-600 hover:bg-red-500 transition-colors"
-        >
-          Clear
-        </button>
-      )}
+        {/* Clear filters */}
+        {filterCount > 1 && (
+          <button
+            onClick={clearFilters}
+            className="px-3 py-1 rounded-custom bg-red-600 text-white border border-red-600 hover:bg-red-500 transition-colors"
+          >
+            Clear
+          </button>
+        )}
+      </div>
     </div>
   );
 }

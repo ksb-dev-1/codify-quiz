@@ -8,11 +8,21 @@ export async function fetchTopicsFromDB(userId: string) {
     throw new Error("Unauthorized");
   }
 
-  const topics = await prisma.topic.findMany({
-    select: { id: true, name: true },
-  });
+  try {
+    const topics = await prisma.topic.findMany({
+      select: { id: true, name: true },
+    });
 
-  return { success: true, topics };
+    return { success: true, topics };
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+    return {
+      success: false,
+      message: "Failed to fetch topics",
+      error: errorMessage,
+    };
+  }
 }
 
 // Cached function

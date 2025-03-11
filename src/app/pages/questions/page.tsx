@@ -9,29 +9,13 @@ import fetchTopicsServerAction from "@/server-actions/fetchTopicsServerAction";
 
 // Components
 import Container from "@/components/shared/Container";
+import Questions from "@/components/Questions";
 import QuestionListSkeleton from "@/components/skeletons/QuestionListSkeleton";
-import DifficultyFilter from "@/components/DifficultyFilter";
-import StatusFilter from "@/components/StatusFilter";
-import TopicsLoadingSkeleton from "@/components/skeletons/TopicsLoadingSkeleton";
-import TopicsFilter from "@/components/TopicsFilter";
-import FilterTags from "@/components/FilterTags";
-import QuestionList from "@/components/QuestionList";
-import Pagination from "@/components/Pagination";
 
 export const metadata: Metadata = {
   title: "Questions",
   description: "List of questions",
 };
-
-interface QuestionsPageProps {
-  userId: string;
-  currentSearchParams?: {
-    page?: string;
-    status?: string;
-    difficulty?: string;
-    topic?: string;
-  };
-}
 
 export default async function QuestionsPageWrapper({
   searchParams,
@@ -48,22 +32,21 @@ export default async function QuestionsPageWrapper({
 
   return (
     <Container>
-      <QuestionsPage
-        userId={userId}
-        currentSearchParams={currentSearchParams}
-      />
+      <Suspense fallback={<QuestionListSkeleton text="Questions" />}>
+        <QuestionsPage
+          userId={userId}
+          currentSearchParams={currentSearchParams}
+        />
+      </Suspense>
     </Container>
   );
 }
 
-async function QuestionsPage({
-  userId,
-  currentSearchParams,
-}: QuestionsPageProps) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function QuestionsPage({ userId, currentSearchParams }: any) {
   const { page, status, difficulty, topic } = currentSearchParams || {};
-  const isFilterApplied = page || status || difficulty || topic;
 
-  // ✅ Fetch data using Server Actions
+  // ✅ Fetch data using Server Actions parallelly
   const [questionsData, topicsData] = await Promise.all([
     fetchQuestionsServerAction({
       userId,
@@ -76,42 +59,24 @@ async function QuestionsPage({
     fetchTopicsServerAction(userId),
   ]);
 
+  const questionsError = questionsData?.error || "";
   const questions = questionsData?.questions || [];
   const totalPages = questionsData?.totalPages || 1;
+  const topicsError = topicsData?.error || "";
   const topics = topicsData?.topics || [];
 
   return (
-    <>
-      <div className="w-full grid md:grid-cols-2 gap-4">
-        <div className="grid grid-cols-2 gap-4">
-          <StatusFilter />
-          <DifficultyFilter />
-        </div>
-
-        <Suspense fallback={<TopicsLoadingSkeleton />}>
-          <TopicsFilter topics={topics} />
-        </Suspense>
-      </div>
-
-      {(status || difficulty || topic) && (
-        <FilterTags
-          currentStatus={status}
-          currentDifficulty={difficulty}
-          currentTopic={topic}
-        />
-      )}
-
-      <Suspense
-        fallback={<QuestionListSkeleton text="Questions" marginTop="8" />}
-      >
-        <QuestionList questions={questions} isFilterApplied={isFilterApplied} />
-      </Suspense>
-
-      <div className="flex justify-start">
-        {totalPages > 1 && (
-          <Pagination currentPage={Number(page)} totalPages={totalPages} />
-        )}
-      </div>
-    </>
+    <Questions
+      userId={userId}
+      currentPage={page}
+      currentStatus={status}
+      currentDifficulty={difficulty}
+      currentTopic={topic}
+      questionsError={questionsError}
+      questions={questions}
+      totalPages={totalPages}
+      topicsError={topicsError}
+      topics={topics}
+    />
   );
 }
